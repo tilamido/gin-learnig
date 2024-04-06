@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"gin-ranking/cache"
 	"gin-ranking/models"
 	"strconv"
 
@@ -36,6 +37,8 @@ func (v VoteController) AddVote(c *gin.Context) {
 	rs, err := models.AddVote(user.Id, player.Id)
 	if err == nil {
 		models.UpdatePlayerScore(player.Id)
+		redisKey := "ranking:" + strconv.Itoa(player.ActivityId)
+		cache.Rdb.ZIncrBy(cache.Rctx, redisKey, 1, playerIDstr)
 		ReturnSucess(c, 0, "投票成功", rs, 1)
 		return
 	}

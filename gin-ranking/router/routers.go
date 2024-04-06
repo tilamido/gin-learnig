@@ -57,6 +57,7 @@ func Router() *gin.Engine {
 		vote.POST("/add", controllers.VoteController{}.AddVote)
 	}
 
-	r.POST("/rank", controllers.PlayerController{}.GetPlayersRank)
+	r.POST("/rank1", controllers.PlayerController{}.GetPlayersRank)
+	r.POST("/rank2", controllers.PlayerController{}.GetRankingByRedis)
 	return r
 }

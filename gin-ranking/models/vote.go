@@ -18,7 +18,7 @@ func (Vote) TableName() string {
 
 func GetVoteInfo(uID int, pID int) (Vote, error) {
 	var vote Vote
-	err := dao.Db.Where("user_id = ? AND player_id = ?", uID, pID).Error
+	err := dao.Db.Where("user_id = ? AND player_id = ?", uID, pID).Find(&vote).Error
 	return vote, err
 }
 
