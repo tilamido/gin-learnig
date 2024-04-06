@@ -1,0 +1,80 @@
+painc error time:2024-04-05 22:06:23
+runtime error: integer divide by zero
+stacktrace from panic:goroutine 6 [running]:
+runtime/debug.Stack()
+	D:/Programs/go/src/runtime/debug/stack.go:24 +0x5e
+gin-ranking/pkg/logger.Recover.func1()
+	E:/学习/Golang/4-5/gin-ranking/pkg/logger/logger.go:133 +0x276
+panic({0xbbdd40?, 0xf85450?})
+	D:/Programs/go/src/runtime/panic.go:770 +0x132
+gin-ranking/controllers.UserController.GetList({}, 0x0?)
+	E:/学习/Golang/4-5/gin-ranking/controllers/user.go:18 +0x9
+github.com/gin-gonic/gin.(*Context).Next(...)
+	C:/Users/TilaM/go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/context.go:174
+gin-ranking/pkg/logger.Recover(0xc0001c0000)
+	E:/学习/Golang/4-5/gin-ranking/pkg/logger/logger.go:144 +0x62
+github.com/gin-gonic/gin.(*Context).Next(...)
+	C:/Users/TilaM/go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/context.go:174
+github.com/gin-gonic/gin.LoggerWithConfig.func1(0xc0001c0000)
+	C:/Users/TilaM/go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/logger.go:240 +0xdd
+github.com/gin-gonic/gin.(*Context).Next(...)
+	C:/Users/TilaM/go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/context.go:174
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1(0xc0001c0000)
+	C:/Users/TilaM/go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/recovery.go:102 +0x7a
+github.com/gin-gonic/gin.(*Context).Next(...)
+	C:/Users/TilaM/go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/context.go:174
+github.com/gin-gonic/gin.LoggerWithConfig.func1(0xc0001c0000)
+	C:/Users/TilaM/go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/logger.go:240 +0xdd
+github.com/gin-gonic/gin.(*Context).Next(...)
+	C:/Users/TilaM/go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/context.go:174
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest(0xc000141a00, 0xc0001c0000)
+	C:/Users/TilaM/go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/gin.go:620 +0x66e
+github.com/gin-gonic/gin.(*Engine).ServeHTTP(0xc000141a00, {0xceff10, 0xc000522000}, 0xc0000a2000)
+	C:/Users/TilaM/go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/gin.go:576 +0x1b2
+net/http.serverHandler.ServeHTTP({0xceeb88?}, {0xceff10?, 0xc000522000?}, 0x6?)
+	D:/Programs/go/src/net/http/server.go:3137 +0x8e
+net/http.(*conn).serve(0xc000170870, {0xcf0868, 0xc000447800})
+	D:/Programs/go/src/net/http/server.go:2039 +0x5e8
+created by net/http.(*Server).Serve in goroutine 1
+	D:/Programs/go/src/net/http/server.go:3285 +0x4b4
+
+painc error time:2024-04-05 22:10:18
+runtime error: integer divide by zero
+stacktrace from panic:goroutine 6 [running]:
+runtime/debug.Stack()
+	D:/Programs/go/src/runtime/debug/stack.go:24 +0x5e
+gin-ranking/pkg/logger.Recover.func1()
+	E:/学习/Golang/4-5/gin-ranking/pkg/logger/logger.go:133 +0x276
+panic({0xbbdd40?, 0xf85450?})
+	D:/Programs/go/src/runtime/panic.go:770 +0x132
+gin-ranking/controllers.UserController.GetList({}, 0xa?)
+	E:/学习/Golang/4-5/gin-ranking/controllers/user.go:18 +0x9
+github.com/gin-gonic/gin.(*Context).Next(...)
+	C:/Users/TilaM/go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/context.go:174
+gin-ranking/pkg/logger.Recover(0xc0001c0100)
+	E:/学习/Golang/4-5/gin-ranking/pkg/logger/logger.go:144 +0x62
+github.com/gin-gonic/gin.(*Context).Next(...)
+	C:/Users/TilaM/go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/context.go:174
+github.com/gin-gonic/gin.LoggerWithConfig.func1(0xc0001c0100)
+	C:/Users/TilaM/go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/logger.go:240 +0xdd
+github.com/gin-gonic/gin.(*Context).Next(...)
+	C:/Users/TilaM/go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/context.go:174
+github.com/gin-gonic/gin.CustomRecoveryWithWriter.func1(0xc0001c0100)
+	C:/Users/TilaM/go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/recovery.go:102 +0x7a
+github.com/gin-gonic/gin.(*Context).Next(...)
+	C:/Users/TilaM/go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/context.go:174
+github.com/gin-gonic/gin.LoggerWithConfig.func1(0xc0001c0100)
+	C:/Users/TilaM/go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/logger.go:240 +0xdd
+github.com/gin-gonic/gin.(*Context).Next(...)
+	C:/Users/TilaM/go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/context.go:174
+github.com/gin-gonic/gin.(*Engine).handleHTTPRequest(0xc000141a00, 0xc0001c0100)
+	C:/Users/TilaM/go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/gin.go:620 +0x66e
+github.com/gin-gonic/gin.(*Engine).ServeHTTP(0xc000141a00, {0xceff10, 0xc0005220e0}, 0xc0000a2120)
+	C:/Users/TilaM/go/pkg/mod/github.com/gin-gonic/gin@v1.9.1/gin.go:576 +0x1b2
+net/http.serverHandler.ServeHTTP({0xceeb88?}, {0xceff10?, 0xc0005220e0?}, 0x6?)
+	D:/Programs/go/src/net/http/server.go:3137 +0x8e
+net/http.(*conn).serve(0xc000170870, {0xcf0868, 0xc000447800})
+	D:/Programs/go/src/net/http/server.go:2039 +0x5e8
+created by net/http.(*Server).Serve in goroutine 1
+	D:/Programs/go/src/net/http/server.go:3285 +0x4b4
+
