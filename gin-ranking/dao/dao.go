@@ -16,6 +16,7 @@ var (
 
 func init() {
 	Db, err = gorm.Open(mysql.Open(config.Mysqldb), &gorm.Config{})
+
 	if err != nil {
 		logger.Error(map[string]interface{}{"mysql connect error": err.Error()})
 	}
