@@ -5,7 +5,8 @@ FROM golang:1.22 as builder
 WORKDIR /app
 
 # 复制go.mod和go.sum文件
-COPY go.* ./
+COPY go.mod go.sum ./
+
 # 下载依赖
 RUN go mod download
 
@@ -15,7 +16,7 @@ COPY . .
 # 构建应用
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o main .
 
-# 使用scratch作为最终镜像的基础，创建一个最小化的容器
+# 使用alpine作为最终镜像的基础
 FROM alpine:latest  
 RUN apk --no-cache add ca-certificates
 

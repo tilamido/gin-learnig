@@ -60,9 +60,36 @@ export default {
       }
     },
     async register() {
-      // Here you will need to implement the registration logic
-      // Similar to the login method, but likely to a different endpoint
-      // Don't forget to validate the inputs, especially to check if password and confirmPassword match
+      if (this.password !== this.confirmPassword) {
+        alert('两次输入的密码不匹配！');
+        return;
+      }
+
+      try {
+        const response = await fetch('http://127.0.0.1:8888/user/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            username: this.username,
+            password: this.password,
+            confirmpassword: this.confirmPassword, // 确保这个键名与后端期待的一致
+          }),
+        });
+
+        if (!response.ok) {
+          // 如果响应状态码不是2xx，将抛出错误
+          const errorResponse = await response.json(); // 假设后端返回JSON格式的错误信息
+          throw new Error(errorResponse.message || '注册失败');
+        }
+
+        // 处理注册成功逻辑
+        alert('注册成功！');
+        this.toggleForm(); // 切换回登录表单
+      } catch (error) {
+        alert(error.message); // 显示错误消息
+      }
     },
   },
 };

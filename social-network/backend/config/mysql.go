@@ -1,8 +1,19 @@
+// config/mysql.go
+
 package config
 
 const (
-	Mysqldb = "root:123456@tcp(localhost:3306)/socialDB?charset=utf8mb4&parseTime=true&loc=Local"
+	MySQLDSN_DEFAULT = "root:123456@tcp(localhost:3306)/socialDB?charset=utf8mb4&parseTime=true&loc=Local"
 )
+
+var (
+	MySQLDSN string
+)
+
+func init() {
+	MySQLDSN = getEnv("DB_CONNECTION_STRING", MySQLDSN_DEFAULT)
+
+}
 
 /*
 创建数据库

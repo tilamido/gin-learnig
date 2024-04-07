@@ -12,20 +12,26 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8888:8888"
+    environment:
+      - DB_CONNECTION_STRING=root:123456@tcp(mysql:3306)/socialDB?charset=utf8mb4&parseTime=true&loc=Local
+      - REDIS_HOST=redis:6379
+
   mysql:
-    image: mysql:latest
+    build:
+      context: ./mysql
+      dockerfile: Dockerfile
     environment:
       MYSQL_ROOT_PASSWORD: 123456
       MYSQL_DATABASE: socialDB
     volumes:
       - mysql-data:/var/lib/mysql
-    ports:  
+    ports:
       - "3306:3306"
   redis:
     image: redis:alpine
     volumes:
       - redis-data:/data
-    ports:  
+    ports:
       - "6379:6379"
 
 volumes:
