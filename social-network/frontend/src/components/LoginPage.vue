@@ -56,6 +56,7 @@ export default {
       } catch (error) {
         this.loginError = true;
         this.errorMessage = error.message;
+        alert('账号密码错误');
       }
     },
     async register() {
