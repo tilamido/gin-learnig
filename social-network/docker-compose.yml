@@ -1,21 +1,5 @@
 version: '3.8'
 services:
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "80:80"
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    ports:
-      - "8888:8888"
-    environment:
-      - DB_CONNECTION_STRING=root:123456@tcp(mysql:3306)/socialDB?charset=utf8mb4&parseTime=true&loc=Local
-      - REDIS_HOST=redis:6379
-
   mysql:
     build:
       context: ./mysql
@@ -33,6 +17,39 @@ services:
       - redis-data:/data
     ports:
       - "6379:6379"
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: root
+      RABBITMQ_DEFAULT_PASS: 123456
+    ports:
+      - "5672:5672"      
+      - "15672:15672"   
+
+    restart: unless-stopped
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8888:8888"
+    environment:
+      - DB_CONNECTION_STRING=root:123456@tcp(mysql:3306)/socialDB?charset=utf8mb4&parseTime=true&loc=Local
+      - REDIS_HOST=redis:6379
+      - RABBITMQ_URL=amqp://root:123456@rabbitmq:5672/
+    depends_on:
+      - mysql
+      - rabbitmq
+      - redis
+
+
 
 volumes:
   mysql-data:

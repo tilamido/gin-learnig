@@ -12,12 +12,15 @@ var (
 
 func init() {
 	MySQLDSN = getEnv("DB_CONNECTION_STRING", MySQLDSN_DEFAULT)
-
 }
 
 /*
 创建数据库
 CREATE DATABASE socialDB;
+
+使用数据库
+use socialDB;
+
 创建用户表
 CREATE TABLE users (
 	id INT AUTO_INCREMENT PRIMARY KEY,

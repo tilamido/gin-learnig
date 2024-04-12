@@ -1,0 +1,6 @@
+2024-04-09 00:07:35 - 127.0.0.1 "OPTIONS /user/login HTTP/1.1 204 0s "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" "
+2024-04-09 00:07:35 - 127.0.0.1 "POST /user/login HTTP/1.1 400 5.4028ms "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" "
+2024-04-09 00:07:47 - 127.0.0.1 "OPTIONS /user/register HTTP/1.1 204 0s "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" "
+2024-04-09 00:07:47 - 127.0.0.1 "POST /user/register HTTP/1.1 200 109.2892ms "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" "
+2024-04-09 00:08:03 - 127.0.0.1 "OPTIONS /user/login HTTP/1.1 204 0s "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" "
+2024-04-09 00:08:03 - 127.0.0.1 "POST /user/login HTTP/1.1 200 3.1137ms "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36" "

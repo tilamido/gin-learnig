@@ -32,3 +32,35 @@ func AddUser(username, password string) (int, error) {
 	err := dao.SqlDB.Create(&user).Error
 	return user.Id, err
 }
+
+func DeleteUser(username string) error {
+	var user User
+	err := dao.SqlDB.Where("username = ?", username).Delete(&user).Error
+	return err
+}
+
+func ModifyPWD(username, newpassword string) error {
+	var user User
+	err := dao.SqlDB.Model(&user).Where("username=?", username).Update("password", newpassword).Error
+	return err
+}
+
+func GetAllUsers() ([]User, error) {
+	var users []User
+	if err := dao.SqlDB.Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
+}
+
+func GetPageUserList(cnt, offset int) ([]User, error) {
+	var users []User
+	if err := dao.SqlDB.
+		Order("add_time").
+		Limit(cnt).
+		Offset(offset).
+		Find(&users).Error; err != nil {
+		return nil, err
+	}
+	return users, nil
+}

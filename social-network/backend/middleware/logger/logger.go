@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	Logfilepath = "./middleware/runtime/log"
+	Logfilepath = "./runtime/log"
 )
 
 func init() {

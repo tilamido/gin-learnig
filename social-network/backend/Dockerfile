@@ -1,6 +1,7 @@
 # 使用Go官方镜像作为构建环境
 FROM golang:1.22 as builder
 
+ENV GOPROXY=https://goproxy.cn,direct
 # 设置工作目录
 WORKDIR /app
 

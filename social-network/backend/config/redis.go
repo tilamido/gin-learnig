@@ -7,7 +7,9 @@ const (
 )
 
 var (
-	RedisHost string
+	RedisHost     string
+	RedisPassword string
+	RedisDB       int
 )
 
 func init() {
