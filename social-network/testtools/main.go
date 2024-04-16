@@ -60,7 +60,7 @@ type User struct {
 }
 
 func TestLogin() {
-	url := "http://localhost:8888/user/login"
+	url := "http://localhost:8080/user/login"
 	user := User{
 		Username: readUsernameFromFile(),
 		Password: "123456",
@@ -78,7 +78,7 @@ func TestRegister() {
 	}
 	saveUserToFile(filename, user.Username)
 
-	url := "http://localhost:8888/user/register"
+	url := "http://localhost:8080/user/register"
 	TestUrlr(url, user)
 }
 
@@ -93,12 +93,12 @@ func TestMpwd() {
 		NewPassword: newPwd,
 	}
 
-	url := "http://localhost:8888/user/modifypassword"
+	url := "http://localhost:8080/user/modifypassword"
 	TestUrlr(url, user)
 }
 
 func TestUeserlist() {
-	url := "http://localhost:8888/user/list"
+	url := "http://localhost:8080/user/list"
 	TestUrlr(url, nil)
 }
 
@@ -108,7 +108,7 @@ type Page struct {
 }
 
 func TestUeserpagelist() {
-	url := "http://localhost:8888/user/pagelist"
+	url := "http://localhost:8080/user/pagelist"
 	page := Page{
 		MyPage: rand.Intn(10),
 		Offset: rand.Intn(10),
@@ -121,7 +121,7 @@ func TestUeserdelete() {
 	user := User{
 		Username: username,
 	}
-	url := "http://localhost:8888/user/delete"
+	url := "http://localhost:8080/user/delete"
 	TestUrlr(url, user)
 }
 
@@ -136,20 +136,20 @@ type MomentsByUserID struct {
 }
 
 func TestSentMoment() {
-	url := "http://localhost:8888/moment/send"
+	url := "http://localhost:8080/moment/send"
 	moment := Moment{
-		UserID:     uint64(rand.Intn(50) + 800),
+		UserID:     uint64(rand.Intn(50)),
 		Content:    GenerateRandomString(10),
 		ImagePaths: GenerateRandomString(10),
 	}
 	TestUrlr(url, moment)
 }
 func TestMomentlist() {
-	url := "http://localhost:8888/moment/list"
+	url := "http://localhost:8080/moment/list"
 	TestUrlr(url, nil)
 }
 func TestMomentpagelist() {
-	url := "http://localhost:8888/moment/pagelist"
+	url := "http://localhost:8080/moment/pagelist"
 	page := Page{
 		MyPage: rand.Intn(10),
 		Offset: rand.Intn(10),
@@ -157,7 +157,7 @@ func TestMomentpagelist() {
 	TestUrlr(url, page)
 }
 func Testusermoments() {
-	url := "http://localhost:8888/moment/usermoments"
+	url := "http://localhost:8080/moment/usermoments"
 	page := Page{
 		MyPage: rand.Intn(10),
 		Offset: rand.Intn(10),
@@ -165,32 +165,32 @@ func Testusermoments() {
 	TestUrlr(url, page)
 }
 func Testmomentdelete() {
-	url := "http://localhost:8888/moment/delete"
+	url := "http://localhost:8080/moment/delete"
 	Moment := MomentsByUserID{
 		MomentId: rand.Intn(10),
 	}
 	TestUrlr(url, Moment)
 }
 func Testmomentlike() {
-	url := "http://localhost:8888/moment/like"
+	url := "http://localhost:8080/moment/like"
 	Moment := MomentsByUserID{
-		UserID:   rand.Intn(100),
-		MomentId: rand.Intn(100),
+		UserID:   rand.Intn(500),
+		MomentId: 240 + rand.Intn(20),
 	}
 	TestUrlr(url, Moment)
 }
 
 func Testmomentunlike() {
-	url := "http://localhost:8888/moment/unlike"
+	url := "http://localhost:8080/moment/unlike"
 	Moment := MomentsByUserID{
-		UserID:   rand.Intn(100),
+		UserID:   rand.Intn(500),
 		MomentId: rand.Intn(100),
 	}
 	TestUrlr(url, Moment)
 }
 
 func Testmomentcountlikes() {
-	url := "http://localhost:8888/moment/countlikes"
+	url := "http://localhost:8080/moment/countlikes"
 	Moment := MomentsByUserID{
 		UserID:   rand.Intn(100),
 		MomentId: rand.Intn(100),
@@ -228,5 +228,7 @@ func readUsernameFromFile() string {
 }
 
 func main() {
-	ExecutNtimes(10, Testmomentdelete)
+	// ExecutNtimes(400, TestRegister)
+	// ExecutNtimes(20, TestSentMoment)
+	ExecutNtimes(50, Testmomentlike)
 }

@@ -3,6 +3,9 @@ package models
 import (
 	"social-network/dao"
 	"time"
+
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type Like struct {
@@ -13,34 +16,42 @@ type Like struct {
 }
 
 func AddLike(userid, momentid uint64) (*Like, error) {
+
 	like := Like{
 		MomentID: uint64(momentid),
 		UserID:   uint64(userid),
 	}
-	if err := dao.SqlDB.Create(&like).Error; err != nil {
+	if err := dao.SqlDB.Clauses(clause.Insert{Modifier: "IGNORE"}).Create(&like).Error; err != nil {
 		return nil, err
 	}
 	return &like, nil
 }
 
-func DelLike(userid, momentid uint64) (*Like, error) {
-	like := Like{
-		MomentID: uint64(momentid),
-		UserID:   uint64(userid),
-	}
+func DelLike(userid, momentid uint64) error {
 	if err := dao.SqlDB.
-		Where("user_id = ? AND moment_id = ?", like.UserID, like.MomentID).
-		Delete(&like).Error; err != nil {
-		return nil, err
+		Where("user_id = ? AND moment_id = ?", userid, momentid).
+		Delete(&Like{}).Error; err != nil {
+		return err
 	}
-	return &like, nil
+	return nil
 }
 
 func GetLikes(momentid uint64) ([]Like, error) {
-	var like []Like
-	if err := dao.SqlDB.Model(&like).Where("moment_id = ?", momentid).Error; err != nil {
+	var likes []Like
+	if err := dao.SqlDB.Where("moment_id = ?", momentid).Find(&likes).Error; err != nil {
 		return nil, err
 	}
-	return like, nil
+	return likes, nil
+}
 
+func CheckLikeStatus(momentID, userID uint64) (bool, error) {
+	var like Like
+	err := dao.SqlDB.Where("moment_id = ? AND user_id = ?", momentID, userID).First(&like).Error
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return false, nil
+		}
+		return false, err
+	}
+	return true, nil
 }

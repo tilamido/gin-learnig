@@ -6,7 +6,7 @@ import (
 )
 
 type User struct {
-	Id         int       `gorm:"primaryKey" json:"id"`
+	Id         uint64    `gorm:"primaryKey" json:"id"`
 	Username   string    `json:"username"`
 	Password   string    `json:"password,omitempty"`
 	AddTime    time.Time `json:"add_time"`
@@ -22,7 +22,14 @@ func GetUserInfoByName(username string) (User, error) {
 	err := dao.SqlDB.Where("username=?", username).First(&user).Error
 	return user, err
 }
-func AddUser(username, password string) (int, error) {
+
+func GetUserInfoByID(id uint64) (User, error) {
+	var user User
+	err := dao.SqlDB.Where("id = ?", id).First(&user).Error
+	return user, err
+}
+
+func AddUser(username, password string) (User, error) {
 	user := User{
 		Username:   username,
 		Password:   password,
@@ -30,18 +37,18 @@ func AddUser(username, password string) (int, error) {
 		UpdateTime: time.Now(),
 	}
 	err := dao.SqlDB.Create(&user).Error
-	return user.Id, err
+	return user, err
 }
 
-func DeleteUser(username string) error {
+func DeleteUser(id uint64) error {
 	var user User
-	err := dao.SqlDB.Where("username = ?", username).Delete(&user).Error
+	err := dao.SqlDB.Where("id = ?", id).Delete(&user).Error
 	return err
 }
 
-func ModifyPWD(username, newpassword string) error {
+func ModifyPWD(id uint64, newpassword string) error {
 	var user User
-	err := dao.SqlDB.Model(&user).Where("username=?", username).Update("password", newpassword).Error
+	err := dao.SqlDB.Model(&user).Where("id=?", id).Update("password", newpassword).Error
 	return err
 }
 

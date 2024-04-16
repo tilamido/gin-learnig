@@ -1,6 +1,7 @@
 version: '3.8'
 services:
   mysql:
+    container_name: mysql
     build:
       context: ./mysql
       dockerfile: Dockerfile
@@ -10,47 +11,77 @@ services:
     volumes:
       - mysql-data:/var/lib/mysql
     ports:
-      - "3306:3306"
+      - "39001:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+
   redis:
+    container_name: redis
     image: redis:alpine
     volumes:
       - redis-data:/data
     ports:
-      - "6379:6379"
+      - "39002:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
+
   rabbitmq:
-    image: rabbitmq:3-management
     container_name: rabbitmq
+    image: rabbitmq:3-management
     environment:
       RABBITMQ_DEFAULT_USER: root
       RABBITMQ_DEFAULT_PASS: 123456
     ports:
-      - "5672:5672"      
-      - "15672:15672"   
-
+      - "39003:5672"      
+      - "39004:15672"   
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 5s
+      timeout: 3s
+      retries: 3
     restart: unless-stopped
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    ports:
-      - "80:80"
+
   backend:
+    container_name: backend
     build:
       context: ./backend
       dockerfile: Dockerfile
     ports:
-      - "8888:8888"
+      - "39006:8080"
     environment:
-      - DB_CONNECTION_STRING=root:123456@tcp(mysql:3306)/socialDB?charset=utf8mb4&parseTime=true&loc=Local
-      - REDIS_HOST=redis:6379
-      - RABBITMQ_URL=amqp://root:123456@rabbitmq:5672/
+      DB_CONNECTION_STRING: "root:123456@tcp(mysql:3306)/socialDB?charset=utf8mb4&parseTime=true&loc=Local"
+      REDIS_HOST: "redis:6379"
+      RABBITMQ_URL: "amqp://root:123456@rabbitmq:5672/"
     depends_on:
-      - mysql
-      - rabbitmq
-      - redis
+      mysql:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
-
+  web:
+    container_name: frontend
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    ports:
+      - "39007:80"
+    environment:
+      API_HOST: "http://8.134.249.207:39006"
+    depends_on:
+      - backend
 
 volumes:
   mysql-data:
   redis-data:
+  rabbitmq-data:
+

@@ -3,7 +3,7 @@
 package config
 
 const (
-	MySQLDSN_DEFAULT = "root:123456@tcp(localhost:3306)/socialDB?charset=utf8mb4&parseTime=true&loc=Local"
+	MySQLDSN_DEFAULT = "root:123456@tcp(localhost:39001)/socialDB?charset=utf8mb4&parseTime=true&loc=Local"
 )
 
 var (

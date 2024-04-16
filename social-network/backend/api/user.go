@@ -10,13 +10,20 @@ import (
 )
 
 type UserAPI struct{}
-type LoginRequest struct {
-	Username string `json:"username"`
-	Password string `json:"password"`
+type UserReq struct {
+	Username        string `json:"username"`
+	Password        string `json:"password"`
+	ConfirmPassword string `json:"confirmpassword"`
+	NewPassword     string `json:"newpassword"`
+}
+type UserInfo struct {
+	Id       uint64    `gorm:"primaryKey" json:"id"`
+	Username string    `json:"username"`
+	AddTime  time.Time `json:"add_time"`
 }
 
 func (u UserAPI) Login(c *gin.Context) {
-	var req LoginRequest
+	var req UserReq
 	if err := c.BindJSON(&req); err != nil {
 		ReturnError(c, 4001, "请输入正确信息")
 		return
@@ -43,21 +50,20 @@ func (u UserAPI) Login(c *gin.Context) {
 	}
 
 	session := sessions.Default(c)
-	session.Set("login:"+strconv.Itoa(user.Id), user.Id)
+	session.Set("login:"+strconv.FormatUint(user.Id, 10), user.Id)
 	session.Save()
 
-	ReturnSucess(c, 0, "登录成功", user.Username, 1)
+	userinfo := UserInfo{
+		Id:       user.Id,
+		Username: user.Username,
+		AddTime:  user.AddTime,
+	}
+	ReturnSucess(c, 0, "登录成功", userinfo, 1)
 
-}
-
-type RegisterRequest struct {
-	Username        string `json:"username"`
-	Password        string `json:"password"`
-	ConfirmPassword string `json:"confirmpassword"`
 }
 
 func (u UserAPI) Register(c *gin.Context) {
-	var req RegisterRequest
+	var req UserReq
 	if err := c.BindJSON(&req); err != nil {
 		ReturnError(c, 4001, "请输入正确信息")
 		return
@@ -80,47 +86,61 @@ func (u UserAPI) Register(c *gin.Context) {
 		ReturnError(c, 4004, "用户名已存在")
 		return
 	}
-	id, err := models.AddUser(username, EncryMd5(password))
+	user, err := models.AddUser(username, EncryMd5(password))
 	if err != nil {
 		ReturnError(c, 4005, "注册失败,联系管理")
 		return
 	}
-	if id != 0 {
-		ReturnSucess(c, 2000, "注册成功", id, 1)
+	userinfo := UserInfo{
+		Id:       user.Id,
+		Username: user.Username,
+		AddTime:  user.AddTime,
+	}
 
+	if user.Id != 0 {
+		ReturnSucess(c, 0, "注册成功", userinfo, 1)
 		return
 	}
+
 	ReturnError(c, 4005, "注册失败,联系管理")
 
 }
 
 func (u UserAPI) DeleteUser(c *gin.Context) {
-	var req LoginRequest
+	var req UserReq
 	if err := c.BindJSON(&req); err != nil {
 		ReturnError(c, 4001, "参数错误")
 		return
 	}
-
-	if _, err := models.GetUserInfoByName(req.Username); err != nil {
+	username := req.Username
+	if username == "" {
+		ReturnError(c, 4001, "参数错误")
+		return
+	}
+	user, err := models.GetUserInfoByName(username)
+	if err != nil {
+		ReturnError(c, 4002, "查询失败")
+		return
+	}
+	if user.Id == 0 {
 		ReturnError(c, 4002, "用户不存在")
 		return
 	}
-	if err := models.DeleteUser(req.Username); err != nil {
-		ReturnError(c, 4002, "删除失败")
+	if err := models.DeleteUser(user.Id); err != nil {
+		ReturnError(c, 4003, "删除失败")
 		return
 	}
 
-	ReturnSucess(c, 2000, "删除成功", req, 1)
-}
-
-type ModifyRequest struct {
-	Username    string `json:"username"`
-	Password    string `json:"password"`
-	NewPassword string `json:"newpassword"`
+	userinfo := UserInfo{
+		Id:       user.Id,
+		Username: user.Username,
+		AddTime:  user.AddTime,
+	}
+	ReturnSucess(c, 0, "删除成功", userinfo, 1)
 }
 
 func (u UserAPI) ModifyPWD(c *gin.Context) {
-	var req ModifyRequest
+	var req UserReq
 	if err := c.BindJSON(&req); err != nil {
 		ReturnError(c, 4001, "请输入正确信息")
 		return
@@ -129,12 +149,20 @@ func (u UserAPI) ModifyPWD(c *gin.Context) {
 	username := req.Username
 	password := req.Password
 	newpassword := req.NewPassword
+	if username == "" || password == "" || newpassword == "" {
+		ReturnError(c, 4001, "请输入正确信息")
+		return
+	}
 
 	if password == newpassword {
 		ReturnError(c, 4001, "两次密码相同")
 		return
 	}
-	user, _ := models.GetUserInfoByName(username)
+	user, err := models.GetUserInfoByName(username)
+	if err != nil {
+		ReturnError(c, 4001, "查询失败")
+		return
+	}
 	if user.Id == 0 {
 		ReturnError(c, 4002, "用户名不存在")
 		return
@@ -144,20 +172,18 @@ func (u UserAPI) ModifyPWD(c *gin.Context) {
 		return
 	}
 
-	err := models.ModifyPWD(username, EncryMd5(newpassword))
+	err = models.ModifyPWD(user.Id, EncryMd5(newpassword))
 	if err != nil {
 		ReturnError(c, 4002, "修改失败")
 		return
 	}
+	userinfo := UserInfo{
+		Id:       user.Id,
+		Username: user.Username,
+		AddTime:  user.AddTime,
+	}
+	ReturnSucess(c, 0, "修改成功", userinfo, 1)
 
-	ReturnSucess(c, 2000, "修改成功", username, 1)
-
-}
-
-type UserInfo struct {
-	Id       int       `gorm:"primaryKey" json:"id"`
-	Username string    `json:"username"`
-	AddTime  time.Time `json:"add_time"`
 }
 
 func (u UserAPI) GetAllUserList(c *gin.Context) {
@@ -178,17 +204,18 @@ func (u UserAPI) GetAllUserList(c *gin.Context) {
 
 	}
 	counts := len(usersinfo)
-	ReturnSucess(c, 2000, "查询到所有用户", usersinfo, int64(counts))
+	ReturnSucess(c, 0, "查询到所有用户", usersinfo, int64(counts))
 
 }
 
-type PageListRequest struct {
-	Counts int `json:"counts"`
-	Offset int `json:"offset"`
+type PageReq struct {
+	UserID uint64 `json:"user_id"`
+	Counts int    `json:"counts"`
+	Offset int    `json:"offset"`
 }
 
 func (u UserAPI) GetPageUserList(c *gin.Context) {
-	var req PageListRequest
+	var req PageReq
 	if err := c.BindJSON(&req); err != nil {
 		ReturnError(c, 4001, "参数有误")
 		return
@@ -211,6 +238,6 @@ func (u UserAPI) GetPageUserList(c *gin.Context) {
 
 	}
 
-	ReturnSucess(c, 2000, "查询每页用户", usersinfo, int64(counts))
+	ReturnSucess(c, 0, "查询每页用户", usersinfo, int64(len(usersinfo)))
 
 }

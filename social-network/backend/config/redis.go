@@ -3,7 +3,7 @@
 package config
 
 const (
-	RedisHost_DEFAULT = "localhost:6379"
+	RedisHost_DEFAULT = "localhost:39002"
 )
 
 var (

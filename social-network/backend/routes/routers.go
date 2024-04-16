@@ -34,18 +34,17 @@ func Router() *gin.Engine {
 		user.POST("/pagelist", api.UserAPI{}.GetPageUserList)
 		user.POST("/delete", api.UserAPI{}.DeleteUser)
 	}
-
+	r.Static("/uploads", "./uploads")
 	moment := r.Group("/moment")
 	{
 		moment.POST("/send", api.MomentAPI{}.SendMoment)
-		moment.POST("/list", api.MomentAPI{}.GetAllMomentList)
+		moment.POST("/uploadfile", api.MomentAPI{}.UploadFile)
 		moment.POST("/pagelist", api.MomentAPI{}.GetPageMomentList)
 		moment.POST("/usermoments", api.MomentAPI{}.GetMomentsByUserID)
+		moment.POST("/ranked", api.MomentAPI{}.RankMoments)
 		moment.POST("/delete", api.MomentAPI{}.DeleteMoment)
-		// moment.POST("/rank", api.MomentAPI{}.RankMoments)
 		moment.POST("/like", api.LikeAPI{}.LikeMomentByRedis)
 		moment.POST("/unlike", api.LikeAPI{}.UnLikeMomentByRedis)
-		moment.POST("/countlikes", api.LikeAPI{}.GetLikesByMoment)
 
 	}
 

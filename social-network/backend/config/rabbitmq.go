@@ -2,7 +2,7 @@ package config
 
 // 默认的 RabbitMQ 连接配置
 const (
-	RabbitMQURLDefault      = "amqp://root:123456@localhost:5672/"
+	RabbitMQURLDefault      = "amqp://root:123456@localhost:39003/"
 	RabbitMQUsernameDefault = "root"
 	RabbitMQPasswordDefault = "123456"
 )
